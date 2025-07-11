@@ -1,0 +1,37 @@
+.reveal-top{
+    animation-name: reveal-top-anim;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+.reveal-right{
+    animation-name: reveal-right-anim;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+.reveal-left{
+    animation-name: reveal-left-anim;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+@keyframes reveal-top-anim {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0%); opacity: 1; }
+}
+
+@keyframes reveal-left-anim {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0%); opacity: 1; }
+}
+
+@keyframes reveal-right-anim {
+    0% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0%); opacity: 1; }
+}
