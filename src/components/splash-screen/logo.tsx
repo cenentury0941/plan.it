@@ -1,7 +1,8 @@
 import Image from "next/image";
+import "./splash-screen.css";
 
 export default function SplashScreenLogo() {
-    return <div className="flex place-content-center place-items-center text-white gap-2 overflow-none">
+    return <div className="flex place-content-center place-items-center text-white gap-2 overflow-none fade-in-1sec">
         <Image
           className="w-[100px] h-[100px] mb-[20px]"
           src="/earth_logo.png"

@@ -1,7 +1,11 @@
-import { BotMessageSquare, Send, SendHorizonal, UserPlus } from "lucide-react";
+import { BotMessageSquare, Send, UserPlus } from "lucide-react";
+import { useState } from "react";
 
 export default function Chat(){
-    return <div className="absolute right-0 h-full w-[28%] pl-0.75 bg-linear-to-br to-[#733da5] from-[#9d78ff] shadow-[-10px_5px_20px_rgba(14,5,23,0.39)] reveal-right">
+
+    const [tempChat , setTempChat] = useState([{}])
+
+    return <div className="pointer-events-auto absolute right-0 h-full w-[28%] pl-0.75 bg-linear-to-br to-[#733da5] from-[#9d78ff] shadow-[-10px_5px_20px_rgba(14,5,23,0.39)] reveal-right">
         <div className="h-full w-full bg-black/60 pt-[2%]">
             <div className='relative flex px-[5%] flex-row h-[calc(100%-93vh)] w-full place-content-center place-items-center gap-2'>
                 <BotMessageSquare className='h-[3vh] w-[3vh]' color='#ffd6e9'/>
@@ -18,7 +22,7 @@ export default function Chat(){
                 </div>
                 <div className="aspect-square h-full rounded-full bg-linear-to-br to-[#733da5] from-[#9d78ff] p-0.5">
                     <button className="cursor-pointer flex rounded-full h-full w-full bg-[#000C] shrink-0 place-items-center place-content-center pt-[2px] pr-[2px]">
-                        <Send color="white"/>
+                        <Send color="#dac4ff"/>
                     </button>
                 </div>
             </div>

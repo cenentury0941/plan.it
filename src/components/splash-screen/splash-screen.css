@@ -1,0 +1,44 @@
+.zoom-out {
+    animation-name: zoom-out-anim;
+    animation-duration: 3.9s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+.fade-in-1sec {
+    animation-name: reveal-anim;
+    animation-duration: 1s;
+    animation-delay: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+.fade-in-2sec {
+    animation-name: reveal-anim;
+    animation-duration: 1s;
+    animation-delay: 2s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+.fade-in-3sec {
+    animation-name: reveal-anim;
+    animation-duration: 1s;
+    animation-delay: 3s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+@keyframes reveal-anim {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes zoom-out-anim {
+    0% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}

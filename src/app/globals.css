@@ -22,6 +22,14 @@ body {
   background-repeat: no-repeat;
 }
 
+.fuji-background {
+  background: var(--background);
+  background-image: url("/fuji1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 #map {
   height: 100vh;
 }

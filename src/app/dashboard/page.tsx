@@ -7,7 +7,7 @@ import Plan from '@/components/dashboard/plan'
 
 export default function Dashboard(){
     return <div className='h-screen w-screen'>
-        <div className='z-[1024] h-full w-full absolute'>
+        <div className='z-[1024] h-full w-full absolute pointer-events-none'>
             <LogoBanner />
             <Chat />
             <Plan />
