@@ -1,3 +1,4 @@
+import { hasChatUUID } from "@/lib/uuid";
 
 const splashTexts: string[] = [
     "Hello from Plan.it! Plan your next adventure together — with a little help from AI",
@@ -16,3 +17,12 @@ export default function getSplashText() {
     const randomIndex = Math.floor(Math.random() * splashTexts.length);
     return splashTexts[randomIndex];
 }
+
+export function getLoginButtonText() {
+  return hasChatUUID() ? "Continue Planning!" : "Start Planning!";
+} 
+
+export const CHAT_UUID = "chatUUID";
+export const DEVICE_UUID = "deviceUUID";
+
+export const ID_URL_PARAM = "id";

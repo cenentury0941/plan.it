@@ -1,9 +1,11 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
 import NoSsr from "@/components/util/no-ssr";
 import { Zain } from 'next/font/google';
+import StoreProvider from "./store-provider";
 
 const zain = Zain({
     weight: '400',
@@ -30,13 +32,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
-        className={`${zain.className} antialiased min-h-screen`}
+        className={`${zain.className} antialiased min-h-screen scroll-none overflow-hidden`}
       >      
         <NoSsr>
-          {children}
+          <StoreProvider children={children}/>
         </NoSsr>
       </body>
     </html>

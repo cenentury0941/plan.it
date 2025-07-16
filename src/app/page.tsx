@@ -1,6 +1,12 @@
+'use client'
+
 import LoginDialog from "@/components/splash-screen/login-dialog";
 import SplashScreenLogo from "@/components/splash-screen/logo";
 import "../components/splash-screen/splash-screen.css";
+import { getData } from "@/lib/firebase";
+
+console.log("Calling Get Data")
+getData();
 
 export default function Home() {
   return (
