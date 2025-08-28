@@ -60,12 +60,40 @@ export default function Chat(){
         setupMessageListener(getOrCreateChatUUID(), setMessages)
     } , [] )
 
+    const [copied, setCopied] = useState(false);
+
+    const copyModifiedUrl = async (): Promise<string> => {
+      const currentUrl = new URL(window.location.href);
+  
+      // Build new URL with root path but keep the query params
+      const newUrl = `${currentUrl.origin}/${currentUrl.search}`;
+  
+      try {
+        await navigator.clipboard.writeText(newUrl);
+        console.log("Copied to clipboard:", newUrl);
+        setCopied(true);
+  
+        // Hide after 3 seconds
+        setTimeout(() => setCopied(false), 3000);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+  
+      return newUrl;
+    };
+
     return <div className="pointer-events-auto absolute right-0 h-full w-[28%] pl-0.75 bg-linear-to-br to-[#733da5] from-[#9d78ff] shadow-[-10px_5px_20px_rgba(14,5,23,0.39)] reveal-right">
         <div className="h-full w-full bg-black/60 pt-[2%]">
             <div className='relative flex px-[5%] flex-row h-[calc(100%-93vh)] w-full place-content-center place-items-center gap-2'>
                 <BotMessageSquare className='h-[3vh] w-[3vh]' color='#ffd6e9'/>
                 <p className='shrink-0 grow-0 mr-auto text-[4vh] pt-[5px] text-[#ffd6e9]'>AI Chat</p>
-                <div className="h-[3.9vh] w-[3.9vh] bg-transparent transition duration-150 hover:bg-linear-to-bl hover:from-pink-300 hover:to-purple-400 rounded-full p-0.5 cursor-pointer"><div className="h-full w-full p-1 transition duration-150 hover:bg-black/80 rounded-full"><UserPlus className='h-full w-full' color='#dac4ff'/></div></div>
+          
+                {copied && (
+                    <p className='shrink-0 grow-0 ml-auto text-[2.5vh] pt-[5px] text-[#ffd6e9]'>Link Copied!</p>
+                )}
+
+                <div className="h-[3.9vh] w-[3.9vh] bg-transparent transition duration-150 hover:bg-linear-to-bl hover:from-pink-300 hover:to-purple-400 rounded-full p-0.5 cursor-pointer"><div className="h-full w-full p-1 transition duration-150 hover:bg-black/80 rounded-full">
+                <UserPlus onClick={copyModifiedUrl} className='h-full w-full' color='#dac4ff'/></div></div>
                 <div className='absolute bottom-0 h-[1px] w-[90%] bg-[#ffd6e9aa]' />
             </div>
             <div className="relative h-[calc(100%-12vh)] grow-0">
