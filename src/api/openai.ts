@@ -61,7 +61,7 @@ export async function sendChat(
 
   if(query != undefined && query != null)
   {
-    const res = await fetch(`/api/places?lat=40.7484&long=-73.9857&query=restaurant`);
+    const res = await fetch(`/api/places?lat=${latitude}&long=${longitude}&query=${query}`);
     recommendations = await res.json();
     // console.log("Recommendations : " , fetchTop3Places(latitude, longitude, query))
     console.log("Recommendations : " , recommendations)
