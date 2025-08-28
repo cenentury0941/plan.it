@@ -1,10 +1,12 @@
+import { placeSlice } from '@/features/places/place-slice'
 import { chatSlice } from '../features/chat/chat-slice'
 import { configureStore } from '@reduxjs/toolkit'
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      chat: chatSlice.reducer
+      chat: chatSlice.reducer,
+      places: placeSlice.reducer
     }
   })
 }

@@ -1,20 +1,63 @@
-import { setMessages } from "@/features/chat/chat-slice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { BotMessageSquare, Send, UserPlus } from "lucide-react";
 import ChatMessage from "./chat-message";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generateRandomSource } from "@/lib/debug";
 import { canScrollCallback } from "@/lib/utils";
+import { getOrCreateChatUUID, getOrCreateUsername, getUsername } from "@/lib/uuid";
+import { postMessage, setupMessageListener } from "@/lib/firebase";
+import { ChatLog } from "@/lib/types";
+import { mapChatLogsToMessages, sendChat } from "@/api/openai";
+import { useAppSelector } from "@/lib/hooks";
 
 export default function Chat(){
 
-    const dispatch = useAppDispatch()
-    const messages = useAppSelector(state => state.chat.messages)
+    const places = useAppSelector((state)=>{return state.places.places}) as Place[]
+    const [messages, setMessages] = useState<ChatLog[]>([])
     const [inputMessage, setInputMessage] = useState("")
     const [ canScroll , setCanScroll ] = useState<"NONE"|"BOTH"|"UP"|"DOWN">("NONE")
+    const latestMessagesRef = useRef(messages);
+    var lastMessage = "";
+
+    const postMessageHandler = () => {
+        lastMessage = inputMessage;
+        postMessage({source: "User", message: lastMessage, username: getUsername(), ts: Date.now()}, getOrCreateChatUUID())
+        setInputMessage("");
+    }
+
+    function submit(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.key === "Enter") {
+            postMessageHandler()
+        }
+      }
+
+    const invokeAI = async (msg: ChatLog[]) => {
+        var chatResponse = await sendChat(mapChatLogsToMessages(messages, places));
+        if(chatResponse != null)
+        {
+            postMessage(chatResponse.msg, getOrCreateChatUUID())
+            if(chatResponse.rec)
+            {
+                postMessage({source: "System", message: chatResponse.rec, username: "TOOL CALL RESPONSE", ts: Date.now()}, getOrCreateChatUUID())
+            }
+        }
+    }
+
+    useEffect( () => {
+        latestMessagesRef.current = messages;
+        console.log(`Messages Updates | ${getUsername()}`)
+        if(messages.length == 0 || messages.at(0).username != getUsername())
+        {
+            return;
+        }
+        setTimeout( () => {
+            console.log("Pinging AI")
+            invokeAI(latestMessagesRef.current);  
+        } , 1000 )
+    }, [messages] )
 
     useEffect( () => {
         canScrollCallback("chat-messages-container" , setCanScroll, true)
+        setupMessageListener(getOrCreateChatUUID(), setMessages)
     } , [] )
 
     return <div className="pointer-events-auto absolute right-0 h-full w-[28%] pl-0.75 bg-linear-to-br to-[#733da5] from-[#9d78ff] shadow-[-10px_5px_20px_rgba(14,5,23,0.39)] reveal-right">
@@ -34,10 +77,10 @@ export default function Chat(){
             </div>
             <div className="flex h-[calc(100%-94vh)] px-[3%] gap-1">
                 <div className="h-full w-full rounded-full bg-linear-to-br to-[#733da5] from-[#9d78ff] p-0.5">
-                <input value={inputMessage} onChange={(target)=>{setInputMessage(target.currentTarget.value)}} className="w-full h-full bg-[#000C] rounded-full px-[5%] text-white text-2xl" placeholder="Enter messages to chat" type="text"/>
+                <input onKeyDown={submit} value={inputMessage} onChange={(target)=>{setInputMessage(target.currentTarget.value)}} className="w-full h-full bg-[#000C] rounded-full px-[5%] text-white text-2xl" placeholder="Enter messages to chat" type="text"/>
                 </div>
                 <div className="aspect-square h-full rounded-full bg-linear-to-br to-[#733da5] from-[#9d78ff] p-0.5">
-                    <button onClick={()=>{dispatch(setMessages({source: generateRandomSource(), message: inputMessage, username: "User Name", ts: Date.now()}))}} className="cursor-pointer flex rounded-full h-full w-full bg-[#000C] shrink-0 place-items-center place-content-center pt-[2px] pr-[2px]">
+                    <button onClick={postMessageHandler} className="cursor-pointer flex rounded-full h-full w-full bg-[#000C] shrink-0 place-items-center place-content-center pt-[2px] pr-[2px]">
                         <Send color="#dac4ff"/>
                     </button>
                 </div>

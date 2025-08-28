@@ -13,28 +13,28 @@ export function canScrollCallback(containerName: string, setCanScroll: (newCanSc
 
   if(div){
       div.addEventListener('scroll', function() {
-          console.log(`Scroll position of ${containerName}: ${this.scrollTop}`);
+          //console.log(`Scroll position of ${containerName}: ${this.scrollTop}`);
           
           let canScrollUp = true;
           let canScrollDown = true;
 
           if(reversed){
             if ((-1*this.scrollTop) + this.clientHeight >= this.scrollHeight-20) {
-              console.log('Scrolled to top!');
+              //console.log('Scrolled to top!');
               canScrollUp = false;
             }
             if (this.scrollTop >= 0) {
-              console.log('Scrolled to bottom!');
+              //console.log('Scrolled to bottom!');
               canScrollDown = false;
             }
           }
           else{
             if (this.scrollTop <= 0) {
-              console.log('Scrolled to top!');
+              //console.log('Scrolled to top!');
               canScrollUp = false;
             }
             if (this.scrollTop + this.clientHeight >= this.scrollHeight-20) {
-              console.log('Scrolled to bottom!');
+              //console.log('Scrolled to bottom!');
               canScrollDown = false;
             }
           }

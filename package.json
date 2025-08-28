@@ -4,20 +4,29 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:tls": "next dev --turbopack --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@api/fsq-developers-places": "file:.api/apis/fsq-developers-places",
     "@reduxjs/toolkit": "^2.8.2",
+    "aframe": "^1.7.1",
+    "aframe-look-at-component": "^1.0.0",
+    "ar.js": "^2.2.2",
     "firebase": "^11.10.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
+    "openai": "^5.16.0",
     "react": "^19.0.0-rc.1",
     "react-dom": "^19.0.0-rc.1",
     "react-leaflet": "^5.0.0-rc.2",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "react-to-print": "^3.1.1",
+    "three": "^0.179.1",
+    "troika-three-text": "^0.52.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -25,6 +34,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.179.0",
+    "next-https": "^1.1.16",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
