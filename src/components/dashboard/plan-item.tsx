@@ -11,7 +11,7 @@ export default function PlanItem({place, selected}: {place: Place, selected: boo
     const clickHandler = () => {
         dispatch(flyTo(place))
     }
-    const url = `https://192.168.1.100:3000/ar?lat=${place.lat}&lon=${place.lng}&text=${encodeURIComponent(
+    const url = `https://plan-it-git-main-cenentury0941s-projects.vercel.app/ar?lat=${place.lat}&lon=${place.lng}&text=${encodeURIComponent(
         place.name
       )}&subtext=${encodeURIComponent(place.shortDescription)}`;
 

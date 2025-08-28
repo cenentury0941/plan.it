@@ -5,7 +5,7 @@ import { generateRandomSource } from "@/lib/debug";
 import { canScrollCallback } from "@/lib/utils";
 import { getOrCreateChatUUID, getOrCreateUsername, getUsername } from "@/lib/uuid";
 import { postMessage, setupMessageListener } from "@/lib/firebase";
-import { ChatLog } from "@/lib/types";
+import { ChatLog, Place } from "@/lib/types";
 import { mapChatLogsToMessages, sendChat } from "@/api/openai";
 import { useAppSelector } from "@/lib/hooks";
 
