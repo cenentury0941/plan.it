@@ -42,23 +42,23 @@ export default function ARPage() {
       const mainText = new Text();
       mainText.text = placeText;
       mainText.color = 0x000000; // black
-      mainText.fontSize = 5;
+      mainText.fontSize = 2;
       mainText.anchorX = "center";
-      mainText.anchorY = "bottom";
-      mainText.maxWidth = 40;
-      mainText.lineHeight = 1.2;
-      mainText.overflowWrap = "break-word";
+      mainText.anchorY = "middle";
+      mainText.maxWidth = 20;
+      mainText.lineHeight = 1.1;
+      mainText.letterSpacing = 0.02;
 
       const subText = new Text();
       subText.text = subTextParam;
       subText.color = 0x555555; // dark gray
-      subText.fontSize = 2.5;
+      subText.fontSize = 1;
       subText.anchorX = "center";
       subText.anchorY = "top";
-      subText.maxWidth = 40;
-      subText.lineHeight = 1.2;
-      subText.overflowWrap = "break-word";
-      subText.position.set(0, -6, 0);
+      subText.maxWidth = 20;
+      subText.lineHeight = 1.1;
+      subText.letterSpacing = 0.02;
+      subText.position.set(0, -3, 0);
 
       // --- Group for sign ---
       const signGroup = new THREE.Group();
@@ -69,69 +69,90 @@ export default function ARPage() {
       const bgMaterial = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
-        depthWrite: false, // don’t block text
+        depthWrite: false,
+        depthTest: false, // keep behind text
       });
       const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), bgMaterial);
 
-      // Ensure background always renders first
       bgPlane.renderOrder = 0;
       mainText.renderOrder = 1;
       subText.renderOrder = 1;
 
       signGroup.add(bgPlane);
 
-      // --- Background resizing ---
+      // --- Background resizing (stable, local space) ---
       function updateBackground() {
-        const mainBox = new THREE.Box3().setFromObject(mainText);
-        const subBox = new THREE.Box3().setFromObject(subText);
+        mainText.geometry.computeBoundingBox();
+        subText.geometry.computeBoundingBox();
+
+        if (!mainText.geometry.boundingBox || !subText.geometry.boundingBox) return;
+
+        const mainBox = mainText.geometry.boundingBox.clone();
+        const subBox = subText.geometry.boundingBox.clone();
+
+        // shift subBox to match its local position
+        subBox.min.y += subText.position.y;
+        subBox.max.y += subText.position.y;
+
+        // Merge bounding boxes
         const fullBox = mainBox.union(subBox);
 
         const size = new THREE.Vector3();
         fullBox.getSize(size);
+
         const center = new THREE.Vector3();
         fullBox.getCenter(center);
 
-        // Update plane
-        bgPlane.geometry.dispose();
-        bgPlane.geometry = new THREE.PlaneGeometry(size.x + 6, size.y + 6);
+        const padding = 0.5;
 
-        // Align to text center
-        bgPlane.position.set(center.x, center.y, -0.1);
+        bgPlane.geometry.dispose();
+        bgPlane.geometry = new THREE.PlaneGeometry(
+          size.x + padding * 2,
+          size.y + padding * 2
+        );
+
+        bgPlane.position.set(center.x, center.y, -0.05);
       }
 
       mainText.sync(updateBackground);
       subText.sync(updateBackground);
 
-      // Billboard effect
+      // Billboard effect (always face camera)
       function makeBillboard(obj: THREE.Object3D) {
         return () => {
-          obj.lookAt(camera.position);
+          obj.quaternion.copy(camera.quaternion);
         };
       }
       const updateBillboard = makeBillboard(signGroup);
 
       scene.add(signGroup);
 
-      // --- GPS placement ---
+      // --- GPS placement with bearing ---
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const deviceLat = pos.coords.latitude;
           const deviceLon = pos.coords.longitude;
 
-          const R = 6371000; // Earth radius
-          const dLat = ((targetLat - deviceLat) * Math.PI) / 180;
-          const dLon = ((targetLon - deviceLon) * Math.PI) / 180;
+          // Bearing calculation
+          function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            lat1 = lat1 * (Math.PI / 180);
+            lat2 = lat2 * (Math.PI / 180);
 
-          const x = R * dLon * Math.cos((deviceLat * Math.PI) / 180);
-          const z = R * dLat;
+            const y = Math.sin(dLon) * Math.cos(lat2);
+            const x =
+              Math.cos(lat1) * Math.sin(lat2) -
+              Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+            return Math.atan2(y, x);
+          }
 
-          // Raise into the sky
-          signGroup.position.set(x, 30, -z);
+          const angle = bearing(deviceLat, deviceLon, targetLat, targetLon);
 
-          // Scale based on distance
-          const distance = Math.sqrt(x * x + z * z);
-          mainText.fontSize = Math.max(5, distance * 0.05);
-          subText.fontSize = Math.max(2.5, distance * 0.02);
+          const dist = 50; // fixed distance
+          const x = dist * Math.sin(angle);
+          const z = dist * Math.cos(angle);
+
+          signGroup.position.set(x, 0, -z);
         },
         (err) => console.error("Geolocation error:", err)
       );
