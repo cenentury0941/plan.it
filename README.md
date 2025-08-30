@@ -1,6 +1,8 @@
 
 # Plan.it – Collaborative AI-Powered Travel Planner
 
+![Plan.it Screenshot]([https://your-image-url.com/image.png](https://raw.githubusercontent.com/cenentury0941/Pictures/refs/heads/main/planit.png))
+
 Plan.it is a collaborative travel planning platform that combines **AI-assisted chat, live maps, and smart itineraries** to make group trip planning simple and enjoyable.  
 It integrates the **Foursquare Places API** for real-time location recommendations and supports features like PDF itinerary export and an upcoming **AR Explorer Mode**.
 
@@ -71,5 +73,3 @@ Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ---
 
 **Plan.it turns messy group travel chats into smart, organized itineraries.**
-
-
